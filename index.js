@@ -17,10 +17,22 @@ choices.forEach((button) => button.addEventListener("click", playGame));
 
 function startGame(event) {
   event.preventDefault();
-  playerName = playerNameInput.value;
-  playerForm.style.display = "none";
-  gameContainer.style.display = "block";
-  resetGame();
+  playerName = playerNameInput.value.trim();
+  if (!playerName) {
+    alert("Please enter a valid name");
+    return;
+  }
+  const playerIndex = rankings.findIndex(
+    (player) => player.name === playerName
+  );
+  if (playerIndex !== -1) {
+    playerScore = rankings[playerIndex].score;
+  } else {
+    playerScore = 0;
+  }
+  computerScore = 0;
+  playerForm.reset();
+  updateScoreDisplay();
 }
 
 function playGame(event) {
@@ -66,8 +78,7 @@ function showResult(playerChoice, computerChoice, winner) {
       playerChoice
     )}.`;
   }
-  playerScoreEl.textContent = playerScore;
-  computerScoreEl.textContent = computerScore;
+  updateScoreDisplay();
 }
 function capitalize(word) {
   return word.charAt(0).toUpperCase() + word.slice(1);
@@ -94,4 +105,8 @@ function updateRankings() {
   rankingsList.innerHTML = rankings
     .map((player) => `<li>${player.name} : ${player.score}</li>`)
     .join("");
+}
+function updateScoreDisplay() {
+  playerScoreEl.textContent = playerScore;
+  computerScoreEl.textContent = computerScore;
 }
