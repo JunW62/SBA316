@@ -28,3 +28,7 @@ h1 {
 #result {
   margin-top: 20px;
 }
+
+#ranking li {
+  margin: 5px 0;
+}
