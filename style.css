@@ -5,16 +5,41 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #aa7ee1;
+  background-color: #2b0040;
 }
-#game-container {
+
+header {
+  color: white;
+  padding: 20px;
+  text-align: center;
+  width: 100%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2em;
+}
+
+#container {
+  display: flex;
+  justify-content: space-around;
+  width: 95%;
+  max-width: 1200px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+#game-container,
+#rules,
+#ranking-board {
   text-align: center;
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-h1 {
+h2 {
   margin-bottom: 20px;
 }
 #scoreboard {
@@ -24,6 +49,19 @@ h1 {
   margin: 10px;
   padding: 10px 20px;
   font-size: 20px;
+}
+
+#rules img {
+  width: 80%;
+  max-width: 200px;
+  margin-top: 10px;
+}
+
+#rules p {
+  list-style-type: disc;
+  padding-left: 20px;
+  text-align: left;
+  margin: 10px 0;
 }
 
 .choice-icon {

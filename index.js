@@ -9,47 +9,54 @@ const playerNameDisplay = document.getElementById("player-name-display");
 const playerChoiceIcon = document.getElementById("player-choice-icon");
 const computerChoiceIcon = document.getElementById("computer-choice-icon");
 const rankingsList = document.getElementById("rankings");
+const resetButton = document.getElementById("reset-button");
 
 let computerScore = 0;
 let playerScore = 0;
 let playerName = "";
 let rankings = [];
+let anonymousCount = 1;
 
 playerChoiceIcon.src = `./images/rock.svg`;
 computerChoiceIcon.src = `/images/rock.svg`;
 
 playerForm.addEventListener("submit", startGame);
 choices.forEach((button) => button.addEventListener("click", playGame));
+resetButton.addEventListener("click", resetGame);
 
 function startGame(event) {
   event.preventDefault();
-  playerName = playerNameInput.value.trim();
-  if (!playerName) {
-    alert("Please enter your name to start the game.");
-    return;
-  }
-  const playerIndex = rankings.findIndex(
-    (player) => player.name === playerName
-  );
-  if (playerIndex !== -1) {
-    playerScore = rankings[playerIndex].score;
+  if ((playerName = playerNameInput.value.trim() === "")) {
+    playerName = `Anonym ${anonymousCount++}`;
+    playerNameInput.value = playerName;
   } else {
-    playerScore = 0;
-    rankings.push({ name: playerName, score: playerScore, wins: 0, games: 0 });
+    playerName = playerNameInput.value.trim();
   }
-  computerScore = 0;
-  playerForm.reset();
+  initPlayer(playerName);
   updateScoreDisplay();
   updateRankings();
 }
 
 function playGame(event) {
+  if (!playerName) {
+    startGame(new Event("Submit"));
+  }
   const playerChoice = event.target.closest("button").id;
   const computerChoice = getComputerChoice();
   const winner = getWinner(playerChoice, computerChoice);
   showResult(playerChoice, computerChoice, winner);
   updateChoiceIcons(playerChoice, computerChoice);
   updateRankings();
+}
+function initPlayer(name) {
+  const playerIndex = rankings.findIndex((player) => player.name === name);
+  if (playerIndex !== -1) {
+    playerScore = rankings[playerIndex].score;
+  } else {
+    playerScore = 0;
+    rankings.push({ name: name, score: playerScore, wins: 0, games: 0 });
+  }
+  computerScore = 0;
 }
 
 function getComputerChoice() {
@@ -107,11 +114,17 @@ function capitalize(word) {
 }
 
 function resetGame() {
-  let computerScore = 0;
-  let playerScore = 0;
-  playerScoreEl.textContent = playerScore;
-  computerScoreEl.textContent = computerScore;
+  playerName = "";
+  computerScore = 0;
+  playerScore = 0;
+  playerNameInput.value = "";
+  playerNameInput.placeholder = "Enter your name";
+  playerScoreEl.textContent = "0";
+  computerScoreEl.textContent = "0";
   resultEl.textContent = "";
+  playerChoiceIcon.src = "./images/rock.svg";
+  computerChoiceIcon.src = "./images/rock.svg";
+  playerNameDisplay.textContent = "Player";
 }
 
 function updateChoiceIcons(playerChoice, computerChoice) {
