@@ -5,6 +5,7 @@ const resultEl = document.getElementById("result");
 const choices = document.querySelectorAll("#choices button");
 const playerForm = document.getElementById("player-form");
 const playerNameInput = document.getElementById("player-name");
+const playerNameDisplay = document.getElementById("player-name-display");
 const rankingsList = document.getElementById("rankings");
 
 let computerScore = 0;
@@ -29,10 +30,12 @@ function startGame(event) {
     playerScore = rankings[playerIndex].score;
   } else {
     playerScore = 0;
+    rankings.push({ name: playerName, score: playerScore, wins: 0, games: 0 });
   }
   computerScore = 0;
   playerForm.reset();
   updateScoreDisplay();
+  updateRankings();
 }
 
 function playGame(event) {
@@ -63,11 +66,15 @@ function getWinner(playerChoice, computerChoice) {
   }
 }
 function showResult(playerChoice, computerChoice, winner) {
+  const playerIndex = rankings.findIndex(
+    (player) => player.name === playerName
+  );
   if (winner === "player") {
     playerScore++;
     resultEl.textContent = `You Win! ${capitalize(
       playerChoice
     )} beats ${capitalize(computerChoice)}.`;
+    rankings[playerIndex].wins++;
   } else if (winner === "computer") {
     computerScore++;
     resultEl.textContent = `You Lose! ${capitalize(
@@ -78,6 +85,7 @@ function showResult(playerChoice, computerChoice, winner) {
       playerChoice
     )}.`;
   }
+  rankings[playerIndex].games++;
   updateScoreDisplay();
 }
 function capitalize(word) {
@@ -93,20 +101,22 @@ function resetGame() {
 }
 
 function updateRankings() {
-  const playerIndex = rankings.findIndex(
-    (player) => player.name === playerName
-  );
-  if (playerIndex !== -1) {
-    rankings[playerIndex].score = playerScore;
-  } else {
-    rankings.push({ name: playerName, score: playerScore });
-  }
-  rankings.sort((a, b) => b.score - a.score);
+  rankings.sort((a, b) => getWinRate(b) - getWinRate(a));
   rankingsList.innerHTML = rankings
-    .map((player) => `<li>${player.name} : ${player.score}</li>`)
+    .map(
+      (player) =>
+        `<li>${player.name} : ${getWinRate(player).toFixed(2)}% ${
+          player.wins
+        }/${player.games}</li>`
+    )
     .join("");
 }
 function updateScoreDisplay() {
   playerScoreEl.textContent = playerScore;
   computerScoreEl.textContent = computerScore;
+  playerNameDisplay.textContent = playerName;
+}
+
+function getWinRate(player) {
+  return player.games > 0 ? (player.wins / player.games) * 100 : 0;
 }
