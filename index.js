@@ -78,6 +78,7 @@ function showResult(playerChoice, computerChoice, winner) {
       playerChoice
     )} beats ${capitalize(computerChoice)}.`;
     rankings[playerIndex].wins++;
+    triggerConfetti();
   } else if (winner === "computer") {
     computerScore++;
     resultEl.textContent = `You Lose! ${capitalize(
@@ -132,4 +133,12 @@ function updateScoreDisplay() {
 
 function getWinRate(player) {
   return player.games > 0 ? (player.wins / player.games) * 100 : 0;
+}
+
+function triggerConfetti() {
+  confetti({
+    particleCount: 100,
+    spread: 200,
+    origin: { y: 0.6 },
+  });
 }
