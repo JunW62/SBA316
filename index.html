@@ -8,9 +8,12 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css"
     />
     <link rel="stylesheet" href="./style.css" />
-    <title>Rock Papaer Scissors</title>
+    <title>Rock Papaer Scissors Lizard Spock</title>
   </head>
   <body>
+    <header>
+      <h1>Welcome to Rock-Paper-Scissors-Lizard-Spock Game!</h1>
+    </header>
     <div id="game-container">
       <h1>Rock Paper Scissors</h1>
       <form id="player-form">
@@ -29,28 +32,28 @@
               <span id="player-name-display">Player</span> -
               <span id="player-score">0</span>
             </p>
-            <p>Choice : <i id="player-choice-icon" class="far"></i></p>
+            <p>Choice : <img id="player-choice-icon" alt="Player's choice" class="choice-icon"></p>
           </div>
           <div id="computer-info">
             <p>Computer - <span id="computer-score">0</span></p>
-            <p>Choice : <i id="computer-choice-icon" class="far"></i></p>
+            <p>Choice : <img id="computer-choice-icon" alt="Computer's choice" class="choice-icon"></p>
           </div>
         </div>
         <div id="choices">
           <button id="rock">
-            <i class="far fa-hand-rock"></i>
+            <img src="./images/rock.svg" alt="Rock" class="choice-button"></button>
           </button>
           <button id="paper">
-            <i class="far fa-hand-paper"></i>
+            <img src="./images/paper.svg" alt="Paper" class="choice-button"></button>
           </button>
           <button id="scissors">
-            <i class="far fa-hand-scissors"></i>
+            <img src="./images/scissors.svg" alt="Scissors" class="choice-button"></button>
           </button>
           <button id="lizard">
-            <i class="far fa-hand-lizard"></i>
+            <img src="./images/lizard.svg" alt="Lizard" class="choice-button"></button>
           </button>
           <button id="spock">
-            <i class="far fa-hand-spock"></i>
+            <img src="./images/spock.svg" alt="Spock" class="choice-button"></button>
           </button>
         </div>
         <p id="result"></p>

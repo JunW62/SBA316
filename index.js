@@ -15,6 +15,9 @@ let playerScore = 0;
 let playerName = "";
 let rankings = [];
 
+playerChoiceIcon.src = `./images/rock.svg`;
+computerChoiceIcon.src = `/images/rock.svg`;
+
 playerForm.addEventListener("submit", startGame);
 choices.forEach((button) => button.addEventListener("click", playGame));
 
@@ -22,7 +25,7 @@ function startGame(event) {
   event.preventDefault();
   playerName = playerNameInput.value.trim();
   if (!playerName) {
-    alert("Please enter a valid name");
+    alert("Please enter your name to start the game.");
     return;
   }
   const playerIndex = rankings.findIndex(
@@ -81,14 +84,14 @@ function showResult(playerChoice, computerChoice, winner) {
   );
   if (winner === "player") {
     playerScore++;
-    resultEl.textContent = `You Win! ${capitalize(
+    resultEl.textContent = `You Won! ${capitalize(
       playerChoice
     )} beats ${capitalize(computerChoice)}.`;
     rankings[playerIndex].wins++;
     triggerConfetti();
   } else if (winner === "computer") {
     computerScore++;
-    resultEl.textContent = `You Lose! ${capitalize(
+    resultEl.textContent = `You Lost! ${capitalize(
       computerChoice
     )} beats ${capitalize(playerChoice)}.`;
   } else {
@@ -112,15 +115,8 @@ function resetGame() {
 }
 
 function updateChoiceIcons(playerChoice, computerChoice) {
-  const choiceIcons = {
-    rock: "fa-hand-rock",
-    paper: "fa-hand-paper",
-    scissors: "fa-hand-scissors",
-    lizard: "fa-hand-lizard",
-    spock: "fa-hand-spock",
-  };
-  playerChoiceIcon.className = `fa ${choiceIcons[playerChoice]}`;
-  computerChoiceIcon.className = `fa ${choiceIcons[computerChoice]}`;
+  playerChoiceIcon.src = `./images/${playerChoice}.svg`;
+  computerChoiceIcon.src = `/images/${computerChoice}.svg`;
 }
 
 function updateRankings() {
