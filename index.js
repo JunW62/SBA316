@@ -50,7 +50,7 @@ function playGame(event) {
 }
 
 function getComputerChoice() {
-  const choices = ["rock", "paper", "scissors"];
+  const choices = ["rock", "paper", "scissors", "lizard", "spock"];
   const randomIndex = Math.floor(Math.random() * choices.length);
   return choices[randomIndex];
 }
@@ -59,9 +59,16 @@ function getWinner(playerChoice, computerChoice) {
   if (playerChoice === computerChoice) {
     return "draw";
   } else if (
-    (playerChoice === "rock" && computerChoice === "scissors") ||
-    (playerChoice === "paper" && computerChoice === "rock") ||
-    (playerChoice === "scissors" && computerChoice === "paper")
+    (playerChoice === "rock" &&
+      (computerChoice === "scissors" || computerChoice === "lizard")) ||
+    (playerChoice === "paper" &&
+      (computerChoice === "rock" || computerChoice === "spock")) ||
+    (playerChoice === "scissors" &&
+      (computerChoice === "paper" || computerChoice === "lizard")) ||
+    (playerChoice === "lizard" &&
+      (computerChoice === "spock" || computerChoice === "paper")) ||
+    (playerChoice === "spock" &&
+      (computerChoice === "scissors" || computerChoice === "rock"))
   ) {
     return "player";
   } else {
@@ -109,6 +116,8 @@ function updateChoiceIcons(playerChoice, computerChoice) {
     rock: "fa-hand-rock",
     paper: "fa-hand-paper",
     scissors: "fa-hand-scissors",
+    lizard: "fa-hand-lizard",
+    spock: "fa-hand-spock",
   };
   playerChoiceIcon.className = `fa ${choiceIcons[playerChoice]}`;
   computerChoiceIcon.className = `fa ${choiceIcons[computerChoice]}`;
