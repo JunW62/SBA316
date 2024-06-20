@@ -6,6 +6,8 @@ const choices = document.querySelectorAll("#choices button");
 const playerForm = document.getElementById("player-form");
 const playerNameInput = document.getElementById("player-name");
 const playerNameDisplay = document.getElementById("player-name-display");
+const playerChoiceIcon = document.getElementById("player-choice-icon");
+const computerChoiceIcon = document.getElementById("computer-choice-icon");
 const rankingsList = document.getElementById("rankings");
 
 let computerScore = 0;
@@ -39,10 +41,11 @@ function startGame(event) {
 }
 
 function playGame(event) {
-  const playerChoice = event.target.id;
+  const playerChoice = event.target.closest("button").id;
   const computerChoice = getComputerChoice();
   const winner = getWinner(playerChoice, computerChoice);
   showResult(playerChoice, computerChoice, winner);
+  updateChoiceIcons(playerChoice, computerChoice);
   updateRankings();
 }
 
@@ -98,6 +101,16 @@ function resetGame() {
   playerScoreEl.textContent = playerScore;
   computerScoreEl.textContent = computerScore;
   resultEl.textContent = "";
+}
+
+function updateChoiceIcons(playerChoice, computerChoice) {
+  const choiceIcons = {
+    rock: "fa-hand-rock",
+    paper: "fa-hand-paper",
+    scissors: "fa-hand-scissors",
+  };
+  playerChoiceIcon.className = `fa ${choiceIcons[playerChoice]}`;
+  computerChoiceIcon.className = `fa ${choiceIcons[computerChoice]}`;
 }
 
 function updateRankings() {
