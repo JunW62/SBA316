@@ -8,7 +8,6 @@ const playerNameInput = document.getElementById("player-name");
 const playerNameDisplay = document.getElementById("player-name-display");
 const playerChoiceIcon = document.getElementById("player-choice-icon");
 const computerChoiceIcon = document.getElementById("computer-choice-icon");
-const rankingsList = document.getElementById("rankings");
 const resetButton = document.getElementById("reset-button");
 
 let computerScore = 0;
@@ -34,7 +33,7 @@ function startGame(event) {
   }
   initPlayer(playerName);
   updateScoreDisplay();
-  updateRankings();
+  updateRankingTable();
 }
 
 function playGame(event) {
@@ -46,7 +45,7 @@ function playGame(event) {
   const winner = getWinner(playerChoice, computerChoice);
   showResult(playerChoice, computerChoice, winner);
   updateChoiceIcons(playerChoice, computerChoice);
-  updateRankings();
+  updateRankingTable();
 }
 function initPlayer(name) {
   const playerIndex = rankings.findIndex((player) => player.name === name);
@@ -116,7 +115,7 @@ function capitalize(word) {
 function resetGame() {
   playerName = "";
   computerScore = 0;
-  playerScore = 0;
+  let playerScore = 0;
   playerNameInput.value = "";
   playerNameInput.placeholder = "Enter your name";
   playerScoreEl.textContent = "0";
@@ -132,16 +131,45 @@ function updateChoiceIcons(playerChoice, computerChoice) {
   computerChoiceIcon.src = `/images/${computerChoice}.svg`;
 }
 
-function updateRankings() {
-  rankings.sort((a, b) => getWinRate(b) - getWinRate(a));
-  rankingsList.innerHTML = rankings
-    .map(
-      (player) =>
-        `<li>${player.name} : ${getWinRate(player).toFixed(2)}% ${
-          player.wins
-        }/${player.games}</li>`
-    )
-    .join("");
+function updateRankingTable() {
+  const tableContainer = document.getElementById("ranking-table-container");
+  if (tableContainer.firstChild) {
+    tableContainer.removeChild(tableContainer.firstChild);
+  }
+  const table = document.createElement("table");
+  table.classList.add("ranking-table");
+  const headerRow = document.createElement("tr");
+  ["Rank", "Name", "Win Rate", "Wins/Games"].forEach((text) => {
+    const headerCell = document.createElement("th");
+    headerCell.textContent = text;
+    headerRow.appendChild(headerCell);
+  });
+  table.appendChild(headerRow);
+  rankings.forEach((player, index) => {
+    const row = document.createElement("tr");
+    ["Rank", "Name", "Win Rate", "Wins/Games"].forEach(
+      (column, columnIndex) => {
+        const cell = document.createElement("td");
+        switch (column) {
+          case "Rank":
+            cell.textContent = index + 1;
+            break;
+          case "Name":
+            cell.textContent = player.name;
+            break;
+          case "Win Rate":
+            cell.textContent = `${getWinRate(player).toFixed(2)}%`;
+            break;
+          case "Wins/Games":
+            cell.textContent = `${player.wins}/${player.games}`;
+            break;
+        }
+        row.appendChild(cell);
+      }
+    );
+    table.appendChild(row);
+  });
+  tableContainer.appendChild(table);
 }
 function updateScoreDisplay() {
   playerScoreEl.textContent = playerScore;
