@@ -9,6 +9,8 @@ const playerNameDisplay = document.getElementById("player-name-display");
 const playerChoiceIcon = document.getElementById("player-choice-icon");
 const computerChoiceIcon = document.getElementById("computer-choice-icon");
 const resetButton = document.getElementById("reset-button");
+resultEl.textContent = "Click Icon to make your move!";
+resultEl.style.backgroundColor = "transparent";
 
 let computerScore = 0;
 let playerScore = 0;
@@ -126,12 +128,14 @@ function capitalize(word) {
 function resetGame() {
   playerName = "";
   computerScore = 0;
-  let playerScore = 0;
+  playerScore = 0;
   playerNameInput.value = "";
   playerNameInput.placeholder = "Enter your name";
   playerScoreEl.textContent = "0";
   computerScoreEl.textContent = "0";
   resultEl.textContent = "";
+  resultEl.textContent = "Click Icon to make your move!";
+  resultEl.style.backgroundColor = "transparent";
   playerChoiceIcon.src = "./images/rock.svg";
   computerChoiceIcon.src = "./images/rock.svg";
   playerNameDisplay.textContent = "Player";
@@ -145,16 +149,21 @@ function updateChoiceIcons(playerChoice, computerChoice) {
 function updateRankingTable() {
   const tableContainer = document.getElementById("ranking-table-container");
 
-  // Clear the existing table if it exists
   if (tableContainer.firstChild) {
     tableContainer.removeChild(tableContainer.firstChild);
   }
 
-  // Create the table and its header
+  rankings.sort((a, b) => {
+    if (b.score === a.score) {
+      return b.wins / b.games - a.wins / a.games; // Secondary sort by win rate
+    }
+    return b.score - a.score;
+  });
+
   const table = document.createElement("table");
   table.classList.add("ranking-table");
   const headerRow = document.createElement("tr");
-  const headers = ["Rank", "Name", "Win Rate", "Wins/Games"];
+  const headers = ["Rank", "Name", "Score", "Wins/Games"];
   headers.forEach((text) => {
     const headerCell = document.createElement("th");
     headerCell.textContent = text;
@@ -162,25 +171,23 @@ function updateRankingTable() {
   });
   table.appendChild(headerRow);
 
-  // Create a document fragment to assemble new table rows
   const fragment = document.createDocumentFragment();
 
-  // Template row for cloning
   const templateRow = document.createElement("tr");
-  templateRow.innerHTML = "<td></td><td></td><td></td><td></td>"; // Setup empty cells
+  templateRow.innerHTML = "<td></td><td></td><td></td><td></td>";
   rankings.forEach((player, index) => {
-    const newRow = templateRow.cloneNode(true); // Clone the template row
+    const newRow = templateRow.cloneNode(true);
     newRow.cells[0].textContent = index + 1;
     newRow.cells[1].textContent = player.name;
     newRow.cells[2].textContent = `${getWinRate(player).toFixed(2)}%`;
     newRow.cells[3].textContent = `${player.wins}/${player.games}`;
-    fragment.appendChild(newRow); // Add the populated row to the fragment
+    fragment.appendChild(newRow);
   });
 
-  // Append the fragment to the table
   table.appendChild(fragment);
-  tableContainer.appendChild(table); // Append the complete table to the container
+  tableContainer.appendChild(table);
 }
+
 function updateScoreDisplay() {
   playerScoreEl.textContent = playerScore;
   computerScoreEl.textContent = computerScore;
@@ -203,6 +210,7 @@ function saveLastWinner(winner) {
   localStorage.setItem("lastGameWinner", winner);
   updateLastWinnerDisplay(winner);
 }
+
 function updateLastWinnerDisplay(winner) {
   const lastWinnerInfo = document.getElementById("last-winner-info");
   lastWinnerInfo.textContent = `Last game winner was ${winner}!`;
@@ -211,3 +219,9 @@ function updateLastWinnerDisplay(winner) {
   lastWinnerInfo.style.marginTop = "10px";
   lastWinnerInfo.style.borderRadius = "5px";
 }
+rankings.sort((a, b) => {
+  if (b.score === a.score) {
+    return b.wins / b.games - a.wins / a.games;
+  }
+  return b.score - a.score;
+});
