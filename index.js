@@ -22,6 +22,12 @@ computerChoiceIcon.src = `/images/rock.svg`;
 playerForm.addEventListener("submit", startGame);
 choices.forEach((button) => button.addEventListener("click", playGame));
 resetButton.addEventListener("click", resetGame);
+window.addEventListener("load", () => {
+  const lastWinner = localStorage.getItem("lastGameWinner");
+  if (lastWinner) {
+    updateLastWinnerDisplay(lastWinner);
+  }
+});
 
 function startGame(event) {
   event.preventDefault();
@@ -93,17 +99,22 @@ function showResult(playerChoice, computerChoice, winner) {
     resultEl.textContent = `You Won! ${capitalize(
       playerChoice
     )} beats ${capitalize(computerChoice)}.`;
+    resultEl.style.backgroundColor = "#4CAF50";
     rankings[playerIndex].wins++;
     triggerConfetti();
+    saveLastWinner(playerName);
   } else if (winner === "computer") {
     computerScore++;
     resultEl.textContent = `You Lost! ${capitalize(
       computerChoice
     )} beats ${capitalize(playerChoice)}.`;
+    resultEl.style.backgroundColor = "#f44336";
+    saveLastWinner("Computer");
   } else {
     resultEl.textContent = `It is a Draw! You both chose ${capitalize(
       playerChoice
     )}.`;
+    resultEl.style.backgroundColor = "#ffeb3b";
   }
   rankings[playerIndex].games++;
   updateScoreDisplay();
@@ -133,43 +144,42 @@ function updateChoiceIcons(playerChoice, computerChoice) {
 
 function updateRankingTable() {
   const tableContainer = document.getElementById("ranking-table-container");
+
+  // Clear the existing table if it exists
   if (tableContainer.firstChild) {
     tableContainer.removeChild(tableContainer.firstChild);
   }
+
+  // Create the table and its header
   const table = document.createElement("table");
   table.classList.add("ranking-table");
   const headerRow = document.createElement("tr");
-  ["Rank", "Name", "Win Rate", "Wins/Games"].forEach((text) => {
+  const headers = ["Rank", "Name", "Win Rate", "Wins/Games"];
+  headers.forEach((text) => {
     const headerCell = document.createElement("th");
     headerCell.textContent = text;
     headerRow.appendChild(headerCell);
   });
   table.appendChild(headerRow);
+
+  // Create a document fragment to assemble new table rows
+  const fragment = document.createDocumentFragment();
+
+  // Template row for cloning
+  const templateRow = document.createElement("tr");
+  templateRow.innerHTML = "<td></td><td></td><td></td><td></td>"; // Setup empty cells
   rankings.forEach((player, index) => {
-    const row = document.createElement("tr");
-    ["Rank", "Name", "Win Rate", "Wins/Games"].forEach(
-      (column, columnIndex) => {
-        const cell = document.createElement("td");
-        switch (column) {
-          case "Rank":
-            cell.textContent = index + 1;
-            break;
-          case "Name":
-            cell.textContent = player.name;
-            break;
-          case "Win Rate":
-            cell.textContent = `${getWinRate(player).toFixed(2)}%`;
-            break;
-          case "Wins/Games":
-            cell.textContent = `${player.wins}/${player.games}`;
-            break;
-        }
-        row.appendChild(cell);
-      }
-    );
-    table.appendChild(row);
+    const newRow = templateRow.cloneNode(true); // Clone the template row
+    newRow.cells[0].textContent = index + 1;
+    newRow.cells[1].textContent = player.name;
+    newRow.cells[2].textContent = `${getWinRate(player).toFixed(2)}%`;
+    newRow.cells[3].textContent = `${player.wins}/${player.games}`;
+    fragment.appendChild(newRow); // Add the populated row to the fragment
   });
-  tableContainer.appendChild(table);
+
+  // Append the fragment to the table
+  table.appendChild(fragment);
+  tableContainer.appendChild(table); // Append the complete table to the container
 }
 function updateScoreDisplay() {
   playerScoreEl.textContent = playerScore;
@@ -187,4 +197,17 @@ function triggerConfetti() {
     spread: 200,
     origin: { y: 0.6 },
   });
+}
+
+function saveLastWinner(winner) {
+  localStorage.setItem("lastGameWinner", winner);
+  updateLastWinnerDisplay(winner);
+}
+function updateLastWinnerDisplay(winner) {
+  const lastWinnerInfo = document.getElementById("last-winner-info");
+  lastWinnerInfo.textContent = `Last game winner was ${winner}!`;
+  lastWinnerInfo.style.fontWeight = "bold";
+  lastWinnerInfo.style.padding = "10px";
+  lastWinnerInfo.style.marginTop = "10px";
+  lastWinnerInfo.style.borderRadius = "5px";
 }
