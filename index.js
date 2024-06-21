@@ -116,7 +116,7 @@ function showResult(playerChoice, computerChoice, winner) {
     resultEl.textContent = `It is a Draw! You both chose ${capitalize(
       playerChoice
     )}.`;
-    resultEl.style.backgroundColor = "#ffeb3b";
+    resultEl.style.backgroundColor = "#efc208";
   }
   rankings[playerIndex].games++;
   updateScoreDisplay();
@@ -130,7 +130,7 @@ function resetGame() {
   computerScore = 0;
   playerScore = 0;
   playerNameInput.value = "";
-  playerNameInput.placeholder = "Enter your name";
+  playerNameInput.placeholder = "Enter your name to start";
   playerScoreEl.textContent = "0";
   computerScoreEl.textContent = "0";
   resultEl.textContent = "";

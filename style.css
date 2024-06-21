@@ -161,6 +161,7 @@ h2 {
   text-align: center;
   padding: 5px;
   border: 1px solid #ddd;
+  border-radius: 5px;
   background-color: #f9f9f9;
   color: #4caf50;
   font-family: "Nunito", sans-serif;
@@ -170,4 +171,8 @@ h2 {
   background-color: #4caf50;
   color: white;
   font-weight: bold;
+}
+p span {
+  font-weight: bold;
+  color: white;
 }
